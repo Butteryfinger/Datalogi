@@ -1,0 +1,38 @@
+Kolla genom alla funktioner:
+
+Ta bort map med innehåll med:
+rm -r "Map"
+
+
+"Edges" syfta på 2 node som kopplas, som Node1 Node2
+pairs1 och 2 följer detta struktur. Totala linebreaks eller newlines = "edges"
+
+wc pairs1.txt returnerar 10130 20260 801150 där 10130 är newlines hence 10130 edges
+wc pairs2.txt returnerar 10130 30390 882190 där det finns 10130 edges
+
+
+Om en node nämns fler än en gång, kopplas den flera gånger av andra nodes.
+Om txt är välgjorda dvs.
+
+grep -c fp.2.Luci_02H12.ctg.ctg7180000025322 pairs1.txt returnerar antalet
+nämning av noden. Antalet i pairs1 är 42 stycken kopplingar
+
+grep -c fp.2.Luci_02H12.ctg.ctg7180000025322 pairs2.txt visar 0 antal kopplingar
+till noden
+
+
+awk är en programning språk exemplet
+awk '{if ($1<$2) print $2" "$1; else print $1" "$2}' visar en funktion
+där om $1 skrivs först om den är större än $2 annars motsatsen. En körning ger:
+1 2
+2 1
+45 65
+65 45
+
+Med commandot comm jämförs 2 filer
+Med comm -12 file1 file2 returnerar raderna som finns i både filerna
+Så kommandot:
+comm -12 sort pairs1.txt sort pairs2.txt | wc ; där sort är del av kraven ger
+0 0 0
+Alltså delas ingen gemensam node mellan pairs
+
