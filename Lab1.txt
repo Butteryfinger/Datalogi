@@ -1,5 +1,16 @@
 Kolla genom alla funktioner:
 
+"cat" klistrar ihop 2 filer
+"more" och "less" skriver filen i terminalen. 
+"head" och "tail" skriver 10 första eller sista text respektive
+"wc" ger antalet linjer, ord och storlek
+"grep" letar igenom filen för en given sträng
+"sort" sorterar filen efter bokstäver per linjer
+"uniq" returnerar eller ta bort upprepade linjer
+"cut" ta bort delar av en fil
+
+ls -l visa listan med en mer fullständigt version
+
 Ta bort map med innehåll med:
 rm -r "Map"
 
@@ -8,7 +19,7 @@ rm -r "Map"
 pairs1 och 2 följer detta struktur. Totala linebreaks eller newlines = "edges"
 
 wc pairs1.txt returnerar 10130 20260 801150 där 10130 är newlines hence 10130 edges
-wc pairs2.txt returnerar 10130 30390 882190 där det finns 10130 edges
+wc pairs2.txt returnerar 9783 19566 774035 där det finns 9783 edges
 
 
 Om en node nämns fler än en gång, kopplas den flera gånger av andra nodes.
@@ -26,13 +37,13 @@ awk '{if ($1<$2) print $2" "$1; else print $1" "$2}' visar en funktion
 där om $1 skrivs först om den är större än $2 annars motsatsen. En körning ger:
 1 2
 2 1
-45 65
+65 45
 65 45
 
 Med commandot comm jämförs 2 filer
 Med comm -12 file1 file2 returnerar raderna som finns i både filerna
 Så kommandot:
-comm -12 sort pairs1.txt sort pairs2.txt | wc ; där sort är del av kraven ger
-0 0 0
-Alltså delas ingen gemensam node mellan pairs
+comm -1 -2 <(sort pairs1.txt) <(sort pairs2.txt) | wc  där sort är del av kraven ger
+409 w/e w/e
+alltså delas 409 edges mellan graferna.
 
