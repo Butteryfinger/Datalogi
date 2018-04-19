@@ -43,7 +43,6 @@ där om $1 skrivs först om den är större än $2 annars motsatsen. En körning
 Med commandot comm jämförs 2 filer
 Med comm -12 file1 file2 returnerar raderna som finns i både filerna
 Så kommandot:
-comm -1 -2 <(sort pairs1.txt) <(sort pairs2.txt) | wc  där sort är del av kraven ger
-409 w/e w/e
-alltså delas 409 edges mellan graferna.
+awk '{print $2"   "$1}' < pairs1.txt | cat pairs1.txt - | sort - | comm -12 <(sort pairs2.txt) - | wc
+ger resultatet 823 matching
 
