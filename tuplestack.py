@@ -30,18 +30,15 @@ class Stack:
 			def __init__(self, items, ind):
 				self.items = items
 				self.index = ind
-				self.tmp = 0
 				self.current = ()
 				self.rest = self.items
 
 			def __next__(self):
-				if self.tmp == self.index:
+				if self.rest == ():
 					raise StopIteration
+
 				self.current, self.rest = self.rest
-				self.tmp = self.tmp + 1
 				return self.current
-				
-				return self.items[Cur]
 
 			def __iter__(self):
 				return self
@@ -56,14 +53,10 @@ class Stack:
 
 			def __init__(self, items, ind):
 				self.items = items
-				self.index = ind
-				self.tmp = 0
 
 			def __next__(self):
-				if self.tmp == self.index:
+				if self.items == ():
 					raise StopIteration
-
-				self.tmp = self.tmp + 1
 				x, y= self.items
 				self.items = y
 				return x
@@ -73,20 +66,6 @@ class Stack:
  
 		after = dest_iter(self.items, self.length)
 		self.items = ()
-		self.length = 0
 		return after
-
-s = Stack()
-s.push(1)
-s.push(2)
-for x in s:
-    for y in s:
-        print(x, y)
-for x in s.destructive_iterator():
-    print(x)
-
-print(s.pop())
-print(s.pop())
-
 
 		# It works, but feels bad.
