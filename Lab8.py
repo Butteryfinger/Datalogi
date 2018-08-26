@@ -1,14 +1,15 @@
-from multiprocessing import Process
+from multiprocessing import Pool
 import time
+from functools import partial
 #import matplotlib.pyplot as plt
 
 def Sieve(n):
-    Prim = list(range(1,n+1))
+    Prim = list(range(2,n+1))
     Comp = []
     if len(Prim) < 3:
        return Prim, Comp
     else:
-       Pointer = 1
+       Pointer = 0
     while Prim[Pointer]**2 < n:
        for e in Prim:
            if e == Prim[Pointer]:
@@ -18,62 +19,61 @@ def Sieve(n):
                Prim.remove(e)
        Pointer += 1
     Prim = list(set(Prim)-set(Comp))
-    Comp = sorted(Comp)
-    return Prim
+    #Comp = sorted(Comp)
+    return Prim, Comp
 
-# Test med 10 000 element ger drygt 0.205 sek med time modulen
+    # paralell variant, 2 trådar
+def ThreadSieve(n):
+    Prim = [] # För helheten skull
+    ls1 = list(range(2,round(n/2))) # Två paralella listor
+    ls2 = list(range(round(n/2), n+1))
+    comp1 = ls1
+    comp2 = ls2
+    p = Pool(2)
+    while ls1[0]**2 < n: # Första element i stora lista är alltid en primtal
+       InrePrim = partial(innerPrim, prim = ls1[0]) # Högre ordning function
+       Prim.append(ls1[0])
+       ls1, ls2 = p.map(InrePrim, [ls1, ls2]) # Hugger ner 2 listor med aktuella primtal och ersätter listorna
+    Prim = Prim + ls1 + ls2 # Primtal från båda halvor
+    incomp = partial(compcount, prim = Prim)
+    comp1, comp2 = p.map(incomp, [comp1, comp2]) # Threaded composit samling
+    comp = comp1 + comp2
+    return Prim, comp
+
+def innerPrim(ls, prim): # Tar en prim och hugger ner stora lista av delbara tal
+    comp = []
+    for e in ls:
+       if e%prim == 0:
+           ls.remove(e)
+    return ls
+
+def compcount(inp, prim):
+    return list(set(inp)-set(prim))
 
 if __name__ == '__main__':
-    experiments = list(range(2,6))
+    
+    ex = [100, 1000, 10000, 100000]
     thread = []
     serial = []
 
-    
-    for it in experiments:
-        jobs = []
-        now = time.clock()
-        S = Process(target = Sieve, args = (10**it,))
-        jobs.append(S)
-        S.start()
-        S.join()
-        thread.append(time.clock()- now)
+    for e in ex:
+        now = time.time()
+        ThreadSieve(e)
+        (thread.append(round(time.time()-now, 5)))
+    print("thread")
     print(thread)
 
-    """
-    for it in experiments:
-        now = time.clock()
-        Sieve(10**it)
-        serial.append(time.clock() - now)
+    for e in ex:
+        now = time.time()
+        Sieve(e)
+        (serial.append(round(time.time()-now, 5)))
+    print("serial")
     print(serial)
-    
-    
-    now = time.clock()
-    Sieve(10**5)
-    print(time.clock() - now)
-    
-    jobs = []
-    now = time.clock()
-    while True:
-        S = Process(target = Sieve, args = (10**5,))
-        
-        S.start()
-        #S.join()
-        break
-    print(time.clock()- now)
-    """
+
 
     #plt.plot(thread, experiments)
     #plt.savefig("Threaded")
 
     #plt.plot(serial, experiments)
     #plt.savefig("Serial")
-        
-
-# Intressant att vid låga antal, så märks nästan ingen förbättring
-
-# Ser om skolans dator är bättre.
-
-# Misc frågor om vissa ämne
-# Vid heaps, kan det finnas "tomma" löv alltså gren 3 och 5 har löv men inga andra vid samma nivå
-# Vilka graph metoder finns det annars
 
